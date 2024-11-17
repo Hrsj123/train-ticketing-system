@@ -1,0 +1,35 @@
+<!-- home.component.html -->
+<div class="container mt-4">
+    <h1 class="text-center m-5">Welcome to Train Ticketing System</h1>
+    <div class="row justify-content-center">
+
+        <!-- Admin Login Card -->
+        <div class="col-md-4 d-flex align-items-stretch">
+            <div class="card shadow-lg w-100">
+                <div class="card-body d-flex flex-column">
+                    <h4 class="card-title text-center">Admin Login</h4>
+                    <p class="card-text text-center">Admins have access to manage trains, view customer data, and more.
+                        Please log in to proceed.</p>
+                    <a routerLink="admin/login" class="btn btn-primary w-100 mt-auto">Login as Admin</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spacer for better alignment -->
+        <div class="col-md-1"></div>
+
+        <!-- User (Customer) Login and Register Cards -->
+        <div class="col-md-4 d-flex align-items-stretch">
+            <div class="card shadow-lg w-100">
+                <div class="card-body d-flex flex-column">
+                    <h4 class="card-title text-center">User Login</h4>
+                    <p class="card-text text-center">Log in to view available train tickets, manage bookings, and more.
+                        If you don’t have an account, please register.</p>
+                    <a routerLink="/user/login" class="btn btn-success w-100 mb-3 mt-auto">Login as User</a>
+                    <a routerLink="/user/register" class="btn btn-info w-100 mb-3">Register as User</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

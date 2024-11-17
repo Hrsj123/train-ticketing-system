@@ -1,0 +1,97 @@
+<div class="container mt-5">
+    <h2 class="text-center">User Customer</h2>
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+  
+      <!-- Username -->
+      <div class="form-group">
+        <label for="userName">Username</label>
+        <input
+          type="text"
+          id="userName"
+          class="form-control"
+          placeholder="Enter Username"
+          [(ngModel)]="customer.userName"
+          name="userName"
+          required
+        />
+      </div>
+  
+      <!-- Address -->
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input
+          type="text"
+          id="address"
+          class="form-control"
+          placeholder="Enter Address"
+          [(ngModel)]="customer.address"
+          name="address"
+        />
+      </div>
+  
+      <!-- Phone Number -->
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input
+          type="text"
+          id="phoneNumber"
+          class="form-control"
+          placeholder="Enter Phone Number"
+          [(ngModel)]="customer.phoneNumber"
+          name="phoneNumber"
+          required
+        />
+      </div>
+  
+      <!-- Age -->
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input
+          type="number"
+          id="age"
+          class="form-control"
+          placeholder="Enter Age"
+          [(ngModel)]="customer.age"
+          name="age"
+          required
+        />
+      </div>
+  
+      <!-- Gender -->
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select
+          id="gender"
+          class="form-control"
+          [(ngModel)]="customer.gender"
+          name="gender"
+          required
+        >
+          <option value="" disabled>Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+  
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          placeholder="Enter Password"
+          [(ngModel)]="customer.password"
+          name="password"
+          required
+        />
+      </div>
+  
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary mt-3" [disabled]="!registerForm.form.valid">
+        Register
+      </button>
+    </form>
+  </div>
+  

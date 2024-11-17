@@ -1,0 +1,75 @@
+/* Admin Dashboard Styles */
+
+.container {
+    margin-top: 50px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.list-group-item.active {
+    background-color: #343a40;
+    border-color: #343a40;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.table td button {
+    margin-right: 10px;
+}
+
+.card {
+    height: 100%;
+}
+
+/* Modal Form Inputs */
+.modal-body input,
+.modal-body select,
+.modal-body textarea {
+    margin-bottom: 10px;
+}
+
+button.btn {
+    margin-top: 10px;
+}
+
+.navbar {
+    margin-bottom: 40px;
+}
+
+.modal-dialog {
+    max-width: 800px;
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent background */
+    z-index: 1040;
+}
+
+.fixed-sidebar {
+    position: fixed; /* Makes the sidebar fixed relative to the viewport */
+    bottom: 0; /* Aligns the sidebar to the top */
+    left: 0; /* Aligns the sidebar to the left */
+    height: 85vh; /* Makes the sidebar full height of the viewport */
+    overflow-y: auto; /* Adds scrolling for the sidebar content if it overflows */
+    width: 25%; /* Adjust width as per your layout */
+    background-color: #f8f9fa; /* Optional: background color for the sidebar */
+    padding: 0px; /* Optional: inner padding */
+    z-index: 1000; /* Keeps the sidebar above other content */
+    border-right: 1px solid #ddd; /* Optional: border for separation */
+}

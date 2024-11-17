@@ -1,0 +1,75 @@
+
+<div class="modal fade show model-dialog" *ngIf="isUpdateModalOpen" style="display: block;" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateTrainModalLabel">Update Train Details</h5>
+                <button type="button" class="btn-close" (click)="closeUpdateModalHandler()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="updateTrain()">
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="trainName" class="form-label">Train Name</label>
+                            <input type="text" class="form-control" id="trainName"
+                                [(ngModel)]="updatedTrain.trainName" name="trainName" required>
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label for="trainNumber" class="form-label">Train No</label>
+                            <input type="number" class="form-control" id="trainNumber"
+                                [(ngModel)]="updatedTrain.trainNumber" name="trainNumber" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="startLocation" class="form-label">Start Location</label>
+                            <input type="text" class="form-control" id="startLocation"
+                                [(ngModel)]="updatedTrain.startLocation" name="startLocation" required>
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label for="endLocation" class="form-label">End Location</label>
+                            <input type="text" class="form-control" id="endLocation"
+                                [(ngModel)]="updatedTrain.endLocation" name="endLocation" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="startDateTime" class="form-label">Start Date & Time</label>
+                            <input type="datetime-local" class="form-control" id="startDateTime"
+                                [(ngModel)]="updatedTrain.startDateTime" name="startDateTime" required>
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label for="endDateTime" class="form-label">End Date & Time</label>
+                            <input type="datetime-local" class="form-control" id="endDateTime"
+                                [(ngModel)]="updatedTrain.endDateTime" name="endDateTime" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="status" class="form-label">Train Status</label>
+                            <select class="form-control" id="status" [(ngModel)]="updatedTrain.status"
+                                name="status">
+                                <option [ngValue]="true">Active</option>
+                                <option [ngValue]="false">Inactive</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label for="totalSeatCount" class="form-label">Total Seat Count</label>
+                            <input type="number" class="form-control" id="totalSeatCount"
+                                [(ngModel)]="updatedTrain.totalSeatCount" name="totalSeatCount" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update Train</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

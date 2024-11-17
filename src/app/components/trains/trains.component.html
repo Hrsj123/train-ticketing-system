@@ -1,0 +1,46 @@
+<h1 class="text-center mt-4">Trains</h1>
+
+@if (!isLoading) {
+
+    @for (item of dataList; track $index) {
+        <div class="card m-3">
+            <div class="card-body">
+                <!-- Train ID and Name -->
+                <h5 class="card-title">{{$index+1}}. {{item.trainName}}</h5>
+                <p class="card-text text-muted">
+                    <strong>From:</strong> {{item.startLocation}} <br>
+                    <strong>To:</strong> {{item.endLocation}}
+                </p>
+
+                <!-- Train Timing -->
+                <p class="card-text">
+                    <strong>Start:</strong> {{formatDate(item.startDateTime)}} <br>
+                    <strong>End:</strong> {{formatDate(item.endDateTime)}}
+                </p>
+
+                <!-- Train Status with Dynamic Badge Color -->
+                <p class="card-text">
+                    <strong>Status: </strong>
+                    <span class="badge" [ngClass]="{'bg-success': item.status, 'bg-danger': !item.status}">
+                        {{item.status ? 'On Time' : 'Delayed'}}
+                    </span>
+                </p>
+
+                <!-- Total Seat Count -->
+                <p class="card-text">
+                    <strong>Total Seats:</strong> {{item.totalSeatCount}}
+                </p>
+
+                <!-- Action Button -->
+                <a href="#" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    }
+} @else {
+    <!-- Loader Spinner -->
+    <div class="d-flex justify-content-center align-items-center" style="height: 60vh;">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}

@@ -1,0 +1,28 @@
+/* home.component.css */
+.container {
+    max-width: 1200px;
+    margin-top: 50px;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.card-text {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.btn {
+    font-size: 16px;
+    padding: 10px;
+}

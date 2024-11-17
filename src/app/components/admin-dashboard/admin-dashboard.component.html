@@ -1,0 +1,255 @@
+<!-- Admin Dashboard -->
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="list-group fixed-sidebar">
+                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">Dashboard</a>
+                <a href="/admin/dashboard#trainManagement" class="list-group-item list-group-item-action">Train Management</a>
+                <a href="/admin/dashboard#userManagement" class="list-group-item list-group-item-action">User Management</a>
+                <a href="/admin/dashboard#bookingManagement" class="list-group-item list-group-item-action">Booking Management</a>
+                <a href="/admin/dashboard#reportsAnalytics" class="list-group-item list-group-item-action">Reports & Analytics</a>
+                <a href="/admin/dashboard#systemConfig" class="list-group-item list-group-item-action">System Configuration</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+
+            <!-- Train Management Section -->
+            <div id="trainManagement">
+                <h2 class="m-1">Train Management</h2>
+
+                <div class="row">
+                    <h4 class="col-8 pt-3">Registered Trains</h4>
+                    <button class="btn btn-primary mb-3 float-end col-3" (click)="openModal()">     <!-- data-bs-toggle="modal" data-bs-target="#addTrainModal"-->
+                        Register New Train
+                    </button>
+                </div>
+                <!-- Train List -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Train Id</th>
+                            <th>Train Number</th>
+                            <th>Train Name</th>
+                            <th>Route</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Placeholder for train data from API -->
+                        <tr *ngFor="let train of trains">
+                            <td>{{ train.trainId }}</td>
+                            <td>{{ train.trainNumber }}</td>
+                            <td>{{ train.trainName }}</td>
+                            <td>{{ train.startLocation }} to {{ train.endLocation }}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" (click)="openUpdateModal(train)">Edit</button>
+                                <button class="btn btn-danger btn-sm" (click)="deleteTrain(train)">Delete</button>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Add Train Modal -->
+                <div *ngIf="isModalOpen" class="backdrop"></div>
+                <div class="modal fade show model-dialog" *ngIf="isModalOpen" style="display: block;" tabindex="-1" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addTrainModalLabel">Register New Train</h5>
+                                <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form (ngSubmit)="registerTrain()">
+                                    <div class="row">
+                                        <div class="mb-3 col-6">
+                                            <label for="trainName" class="form-label">Train Name</label>
+                                            <input type="text" class="form-control" id="trainName"
+                                                [(ngModel)]="newTrain.trainName" name="trainName" required>
+                                        </div>
+
+                                        <div class="mb-3 col-6">
+                                            <label for="trainNumber" class="form-label">Train No</label>
+                                            <input type="number" class="form-control" id="trainNumber"
+                                                [(ngModel)]="newTrain.trainNumber" name="trainNumber" required>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="mb-3 col-6">
+                                            <label for="startLocation" class="form-label">Start Location</label>
+                                            <input type="text" class="form-control" id="startLocation"
+                                                [(ngModel)]="newTrain.startLocation" name="startLocation" required>
+                                        </div>
+    
+                                        <div class="mb-3 col-6">
+                                            <label for="endLocation" class="form-label">End Location</label>
+                                            <input type="text" class="form-control" id="endLocation"
+                                                [(ngModel)]="newTrain.endLocation" name="endLocation" required>
+                                        </div>
+                                    </div>
+
+                                    
+                                    <div class="row">
+                                        <div class="mb-3 col-6">
+                                            <label for="startDateTime" class="form-label">Start Date & Time</label>
+                                            <input type="datetime-local" class="form-control" id="startDateTime"
+                                            [(ngModel)]="newTrain.startDateTime" name="startDateTime" required>
+                                        </div>
+                                        
+                                        <div class="mb-3 col-6">
+                                            <label for="endDateTime" class="form-label">End Date & Time</label>
+                                            <input type="datetime-local" class="form-control" id="endDateTime"
+                                            [(ngModel)]="newTrain.endDateTime" name="endDateTime" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="mb-3 col-6">
+                                            <label for="status" class="form-label">Train Status</label>
+                                            <select class="form-control" id="status" [(ngModel)]="newTrain.status"
+                                                name="status">
+                                                <option [ngValue]="true">Active</option>
+                                                <option [ngValue]="false">Inactive</option>
+                                            </select>
+                                        </div>
+    
+                                        <div class="mb-3 col-6">
+                                            <label for="totalSeatCount" class="form-label">Total Seat Count</label>
+                                            <input type="number" class="form-control" id="totalSeatCount"
+                                                [(ngModel)]="newTrain.totalSeatCount" name="totalSeatCount" required>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Register Train</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Train Modal -->
+                <div *ngIf="isUpdateModalOpen" class="backdrop"></div>
+                <app-train-update
+                    *ngIf="isUpdateModalOpen" 
+                    [trainData]="selectedTrain" 
+                    [isUpdateModalOpen]="isUpdateModalOpen"
+                    (closeUpdateModal)="closeUpdateModal()">
+                </app-train-update>
+            </div>
+
+            <!-- User Management Section -->
+            <div id="userManagement" class="mt-5">
+                <h2>User Management</h2>
+                <input type="text" class="form-control mb-3" placeholder="Search Users" [(ngModel)]="searchQuery">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Placeholder for user data from API -->
+                        <tr *ngFor="let user of users | filter:searchQuery">
+                            <td>{{ user.userName }}</td>
+                            <td>{{ user.phoneNumber }}</td>
+                            <td>{{ user.role }}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm" (click)="blockUser(user)">Block</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Booking Management Section -->
+            <div id="bookingManagement" class="mt-5">
+                <h2>Booking Management</h2>
+                <input type="text" class="form-control mb-3" placeholder="Search Bookings (PNR/Name)"
+                    [(ngModel)]="bookingQuery">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>PNR</th>
+                            <th>Train</th>
+                            <th>Passenger</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Placeholder for booking data from API -->
+                        <tr *ngFor="let booking of bookings | filter:bookingQuery">
+                            <td>{{ booking.pnr }}</td>
+                            <td>{{ booking.trainName }}</td>
+                            <td>{{ booking.passengerName }}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm" (click)="cancelBooking(booking)">Cancel</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Reports and Analytics Section -->
+            <div id="reportsAnalytics" class="mt-5">
+                <h2>Reports & Analytics</h2>
+                <button class="btn btn-primary m-1" (click)="showAlert('Coming Soon...')">Generate Daily Report</button>
+                <button class="btn btn-primary m-1" (click)="showAlert('Coming Soon...')">Generate Monthly
+                    Report</button>
+                <!-- Placeholder for displaying reports -->
+                <div *ngIf="reportData">
+                    <h4>Reports Data</h4>
+                    <pre>{{ reportData | json }}</pre>
+                </div>
+            </div>
+
+            <!-- System Configuration Section -->
+            <div id="systemConfig" class="mt-5">
+                <h2>System Configuration</h2>
+                <button class="btn btn-warning mb-3 " data-bs-toggle="modal" data-bs-target="#systemSettingsModal"
+                    (click)="showAlert('Coming Soon...')">Manage
+                    Settings</button>
+
+                <!-- Modal for System Settings -->
+                <div class="modal fade" id="systemSettingsModal" tabindex="-1"
+                    aria-labelledby="systemSettingsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="systemSettingsModalLabel">System Configuration</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="emailNotifications" class="form-label">Email Notifications</label>
+                                        <select class="form-control" id="emailNotifications">
+                                            <option>Enabled</option>
+                                            <option>Disabled</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="smsAlerts" class="form-label">SMS Alerts</label>
+                                        <select class="form-control" id="smsAlerts">
+                                            <option>Enabled</option>
+                                            <option>Disabled</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
