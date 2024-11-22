@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UserLogin } from '../../model/class/User';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AdminDashboardService } from '../../services/admin-dashboard.service';
+import { AuthService } from '../../services/authentication/auth.service';
 
 @Component({
   selector: 'app-admin-login-form',
@@ -12,20 +14,26 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './admin-login-form.component.css'
 })
 export class AdminLoginFormComponent {
+  // Service
+  adminService = inject(AdminDashboardService);
+  authService = inject(AuthService);
+
   adminLogin: UserLogin = new UserLogin();
   loginError: boolean = false;
 
   constructor(private router: Router) { }
 
   // Handle form submission
-  onSubmit() {  // TODO: API Call here!
-    // Normally, you would call a service to verify the credentials
-    // If credentials are correct, navigate to the admin dashboard
-    if (this.adminLogin.userName === 'admin' && this.adminLogin.password === 'admin123') {
-      console.log("User and Password matched!!!");
-      this.router.navigate(['/admin/dashboard']);
-    } else {
-      this.loginError = true; // Show error message
-    }
+  onSubmit() {
+    this.authService.login('admin', this.adminLogin).subscribe({
+      next: (res) => {
+        alert("Login Successfull, Redirecting to Dashboard");
+        this.router.navigate(['/admin/dashboard']);
+      },
+      error: (err) => {
+        this.loginError = true;
+        console.error("Error Occured " + err);
+      }
+    });
   }
 }

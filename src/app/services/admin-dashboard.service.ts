@@ -4,14 +4,15 @@ import { Observable } from 'rxjs';
 import { IUser } from '../model/interface/user';
 import { IBooking } from '../model/interface/booking';
 import { TrainRegister } from '../model/class/Train';
+import { UserLogin } from '../model/class/User';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminDashboardService {
-  baseUrl: string = "http://localhost:8080/api/v1"
-  username: string = localStorage.getItem('username') || 'admin';       // Set on login success in local storage
-  password: string = localStorage.getItem('password') || 'admin123';    // Set on login success in local storage
+  baseUrl: string = 'http://localhost:8080/api/v1';
+  username: string = localStorage.getItem('username') || '';       // Set on login success in local storage
+  password: string = localStorage.getItem('password') || '';    // Set on login success in local storage
   credentials: string = btoa(this.username + ':' + this.password);
   httpOptions: object = {
     headers: new HttpHeaders({
@@ -21,6 +22,15 @@ export class AdminDashboardService {
   };
 
   constructor(private http: HttpClient) { }
+
+  postAdminLogin(loginCredentials: UserLogin): Observable<HttpResponse<any>> {
+    return this.http.post<any>(this.baseUrl + "/admin/login", loginCredentials, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      observe: 'response',
+    });
+  }
 
   getDashboardUsers(): Observable<IUser[]> {
     return this.http.get<IUser[]>(this.baseUrl + "/customers", this.httpOptions);

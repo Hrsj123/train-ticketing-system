@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { UserLogin } from '../../model/class/User';
 import { Router } from '@angular/router';
 import { CustomerService } from '../../services/customer.service';
+import { AuthService } from '../../services/authentication/auth.service';
 
 @Component({
   selector: 'app-customer-login-form',
@@ -13,6 +14,7 @@ import { CustomerService } from '../../services/customer.service';
 })
 export class CustomerLoginFormComponent {
   customerService = inject(CustomerService)
+  authService = inject(AuthService)
   loginModel: UserLogin;
 
   constructor(private router: Router) {
@@ -23,12 +25,16 @@ export class CustomerLoginFormComponent {
   // Handle form submission
   onSubmit() {
     if (this.loginModel) {
-      this.customerService.postCustomerLogin(this.loginModel).subscribe({
+      this.authService.login('user', this.loginModel).subscribe({
         next: (response) => {
+          console.log("----------------");
+          console.log(response);
+          console.log("----------------");
           console.log('Customer Logged In Successfully:', response);
           // Set localstorage
           localStorage.setItem("username", this.loginModel.userName);
           localStorage.setItem("password", this.loginModel.password);
+          localStorage.setItem("usertype", "CUSTOMER");
           // Redirect
           alert('Successful logged In! Redirecting to Dashboard...');
           this.router.navigate(['user/dashboard']);

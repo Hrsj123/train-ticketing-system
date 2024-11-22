@@ -11,13 +11,9 @@ export class TrainService {
   constructor(private http: HttpClient) { }
 
   baseUrl: string = "http://localhost:8080/api/v1"
-  username: string = localStorage.getItem('username') || 'admin';       // Set on login success in local storage
-  password: string = localStorage.getItem('password') || 'admin123';    // Set on login success in local storage
-  credentials: string = btoa(this.username + ':' + this.password);
   httpOptions: object = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Basic ' + this.credentials
     })
   };
 
