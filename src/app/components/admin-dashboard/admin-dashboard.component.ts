@@ -10,12 +10,13 @@ import { IBooking } from '../../model/interface/booking';
 import { TrainRegister } from '../../model/class/Train';
 import { HttpResponse } from '@angular/common/http';
 import { TrainUpdateComponent } from '../train-update/train-update.component';
+import { RouterLinkActive } from '@angular/router';
 
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [TrainUpdateComponent, FormsModule, JsonPipe, CommonModule, FilterPipe],
+  imports: [TrainUpdateComponent, FormsModule, JsonPipe, CommonModule, FilterPipe, RouterLinkActive],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css'
 })
@@ -55,7 +56,11 @@ export class AdminDashboardComponent implements OnInit {
   loadTrains() {
     this.trainService.getTrainsData().subscribe({
       next: (trains: ITrain[]) => {
-        this.trains = [...this.trains, ...trains];
+        const newTrains: ITrain[] = trains.map(train => {
+          train.trainNumber = parseInt(train.trainName.split(' ')[1]);
+          return train;
+        });
+        this.trains = [...this.trains, ...newTrains];
       },
       error: (err: any) => {
         console.error('Error occurred:', err);

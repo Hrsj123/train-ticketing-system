@@ -4,20 +4,19 @@ import { AuthService } from '../services/authentication/auth.service';
 import { TokenService } from '../services/authentication/token.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, switchMap, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Inject dependencies
   const authService = inject(AuthService);
   const tokenService = inject(TokenService);
+  const router = inject(Router);
   
   // Fetch the current access token
   const accessToken = tokenService.getAccessToken();
   
   // If an access token exists, clone the request and add the Authorization header
   let authReq = req;
-  console.log("--------------------------------------AUTH TOKEN")
-  console.log(accessToken)
-  console.log("--------------------------------------AUTH TOKEN")
   if (accessToken) {
     authReq = req.clone({
       setHeaders: { Authorization: `Bearer ${accessToken}` }
@@ -30,9 +29,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401 && tokenService.getRefreshToken()) {
         // Access token expired; attempt to refresh
         return authService.refreshToken().pipe(
-          switchMap(() => {
+          switchMap((response) => {
             // Retry the failed request with the new access token
-            const newAccessToken = tokenService.getAccessToken();
+            const newAccessToken = response.accessToken;
+            const newRefreshToken = response.refreshToken;
+
+            tokenService.setTokens(newAccessToken, newRefreshToken);
             const retryReq = req.clone({
               setHeaders: { Authorization: `Bearer ${newAccessToken}` }
             });
@@ -41,6 +43,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           catchError(err => {
             // If refreshing fails, logout
             authService.logout();
+            authService.setLoggedInUserRole(null);
+            router.navigate(['/']);
             return throwError(() => err);
           })
         );

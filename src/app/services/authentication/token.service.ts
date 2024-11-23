@@ -12,6 +12,7 @@ export class TokenService {
   // Set access and refresh tokens
   setTokens(accessToken: string, refreshToken: string): void {
     this.accessToken = accessToken;
+    localStorage.setItem("refresh", refreshToken);
     this.refreshToken = refreshToken;
   }
 
@@ -22,12 +23,12 @@ export class TokenService {
 
   // Get the refresh token
   getRefreshToken(): string | null {
-    return this.refreshToken;
+    return this.refreshToken || localStorage.getItem("refresh");
   }
 
   // Clear the tokens
   clearTokens(): void {
     this.accessToken = null;
     this.refreshToken = null;
-  }
+  }  
 }

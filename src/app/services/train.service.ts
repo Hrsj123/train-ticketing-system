@@ -2,24 +2,30 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ITrain, ITrainDashboard } from '../model/interface/train';
+import { TokenService } from './authentication/token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrainService {
+  private baseUrl: string = 'http://localhost:8080/api/v1';
+  private accessToken: string | null;
+  private httpHeaders: HttpHeaders = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {
+    this.accessToken = tokenService.getAccessToken();
+  }
 
-  baseUrl: string = "http://localhost:8080/api/v1"
-  httpOptions: object = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    })
-  };
+  private getAuthHeader(): HttpHeaders {
+    return this.httpHeaders.set('Authorization', `Bearer ${this.accessToken}`);
+  }
 
   // Train CRUD
   getTrainsData(): Observable<ITrain[]> {
-    return this.http.get<ITrain[]>(this.baseUrl + "/trains", this.httpOptions)
+    const url = `${this.baseUrl}/trains`;
+    return this.http.get<ITrain[]>(url, { headers: this.getAuthHeader() })
       .pipe(
         map((trains: ITrain[]) => {
           return trains.map((train: ITrain) => {

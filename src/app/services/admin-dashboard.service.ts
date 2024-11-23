@@ -4,80 +4,84 @@ import { Observable } from 'rxjs';
 import { IUser } from '../model/interface/user';
 import { IBooking } from '../model/interface/booking';
 import { TrainRegister } from '../model/class/Train';
-import { UserLogin } from '../model/class/User';
+import { TokenService } from './authentication/token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminDashboardService {
-  baseUrl: string = 'http://localhost:8080/api/v1';
-  username: string = localStorage.getItem('username') || '';       // Set on login success in local storage
-  password: string = localStorage.getItem('password') || '';    // Set on login success in local storage
-  credentials: string = btoa(this.username + ':' + this.password);
-  httpOptions: object = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': 'Basic ' + this.credentials
-    })
-  };
+  private baseUrl: string = 'http://localhost:8080/api/v1';
+  private httpHeaders: HttpHeaders = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
+  private accessToken: string | null;
 
-  constructor(private http: HttpClient) { }
-
-  postAdminLogin(loginCredentials: UserLogin): Observable<HttpResponse<any>> {
-    return this.http.post<any>(this.baseUrl + "/admin/login", loginCredentials, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
-      observe: 'response',
-    });
+  constructor(private http: HttpClient, private tokenService: TokenService) {
+    this.accessToken = tokenService.getAccessToken();
   }
 
   getDashboardUsers(): Observable<IUser[]> {
-    return this.http.get<IUser[]>(this.baseUrl + "/customers", this.httpOptions);
+    const httpOptions: object = {
+      headers: this.httpHeaders.set('Authorization', `Bearer ${this.accessToken}`),
+    }
+    return this.http.get<IUser[]>(this.baseUrl + "/customers", httpOptions);
   }
-
+  
   getDashboardBookings(): Observable<IBooking[]> {
-    return this.http.get<IBooking[]>(this.baseUrl + "/bookings", this.httpOptions);
+    const httpOptions: object = {
+      headers: this.httpHeaders.set('Authorization', `Bearer ${this.accessToken}`),
+    }
+    return this.http.get<IBooking[]>(this.baseUrl + "/bookings", httpOptions);
   }
-
+  
   postReisterTrain(newTrainData: TrainRegister): Observable<HttpResponse<any>> {
+    const httpOptions: object = {
+      headers: this.httpHeaders.set('Authorization', `Bearer ${this.accessToken}`).set('observe', 'response'),
+    }
+    
     let { trainNumber, ...postBody } = newTrainData;
     postBody.trainName = postBody.trainName + " " + trainNumber;
-
+    
     return this.http.post<any>(this.baseUrl + "/admin/trains", postBody, {
-      ...this.httpOptions,
+      ...httpOptions,
       observe: 'response',
     });
   }
-
-  updateTrain(trainId: number, updatedTrain: TrainRegister): Observable<HttpResponse<TrainRegister>> {
+  
+  updateTrain(trainId: number, updatedTrain: TrainRegister): Observable<HttpResponse<any>> {
+    const httpOptions: object = {
+      headers: this.httpHeaders.set('Authorization', `Bearer ${this.accessToken}`),
+    }
     const url = `${this.baseUrl}/admin/trains/${trainId}`;
     console.log(updatedTrain)
     // TODO : fix this
     // console.log("----------------------------------")
     // console.log({
-    //   ...updatedTrain,
-    //   startDateTime: updatedTrain.startDateTime.toISOString().slice(0, 19),
-    //   endDateTime: updatedTrain.endDateTime.toISOString().slice(0, 19),
-    // })
+      //   ...updatedTrain,
+      //   startDateTime: updatedTrain.startDateTime.toISOString().slice(0, 19),
+      //   endDateTime: updatedTrain.endDateTime.toISOString().slice(0, 19),
+      // })
     // console.log(url)
     // console.log("----------------------------------")
-    return this.http.put<TrainRegister>(url, {
-        ...updatedTrain,
-        startDateTime: updatedTrain.startDateTime.toISOString().slice(0, 19),
-        endDateTime: updatedTrain.endDateTime.toISOString().slice(0, 19),
-      }, {
-      ...this.httpOptions,
+    return this.http.put<any>(url, {
+      ...updatedTrain,
+      startDateTime: updatedTrain.startDateTime.toISOString().slice(0, 19),
+      endDateTime: updatedTrain.endDateTime.toISOString().slice(0, 19),
+    }, {
+      ...httpOptions,
       observe: 'response',
-    });
+    } );
   }
-  
 
+  
   deleteTrain(trainId: number): Observable<HttpResponse<any>> {
+    const httpOptions: object = {
+      headers: this.httpHeaders.set('Authorization', `Bearer ${this.accessToken}`),
+    }
     const url = `${this.baseUrl}/admin/trains/${trainId}`;
-    
+
     return this.http.delete<any>(url, {
-      ...this.httpOptions,
+      ...httpOptions,
       observe: 'response',
     });
   }

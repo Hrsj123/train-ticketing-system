@@ -27,14 +27,7 @@ export class CustomerLoginFormComponent {
     if (this.loginModel) {
       this.authService.login('user', this.loginModel).subscribe({
         next: (response) => {
-          console.log("----------------");
-          console.log(response);
-          console.log("----------------");
           console.log('Customer Logged In Successfully:', response);
-          // Set localstorage
-          localStorage.setItem("username", this.loginModel.userName);
-          localStorage.setItem("password", this.loginModel.password);
-          localStorage.setItem("usertype", "CUSTOMER");
           // Redirect
           alert('Successful logged In! Redirecting to Dashboard...');
           this.router.navigate(['user/dashboard']);
