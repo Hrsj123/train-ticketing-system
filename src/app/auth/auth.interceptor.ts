@@ -44,6 +44,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             // If refreshing fails, logout
             authService.logout();
             authService.setLoggedInUserRole(null);
+            authService.setUserData(null);
             router.navigate(['/']);
             return throwError(() => err);
           })

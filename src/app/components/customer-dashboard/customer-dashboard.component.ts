@@ -12,9 +12,7 @@ import { ITrain } from '../../model/interface/train';
   styleUrls: ['./customer-dashboard.component.css']
 })
 export class CustomerDashboardComponent implements OnInit {
-  // Services:
   trainService = inject(TrainService);
-
 
   currentFeature: string = 'dashboard';
   searchCriteria = { origin: '', destination: '', travelDate: '' };
@@ -24,9 +22,16 @@ export class CustomerDashboardComponent implements OnInit {
   bookingDetails: any = {}; // Booking form data
   cancelDetails: any = {}; // Cancellation form data
 
-  username: string | null = localStorage.getItem("username");
+  username: string;
 
-  constructor() {}
+  constructor() {
+    const userData = localStorage.getItem("userData");
+    if (userData !== null) {
+      this.username = JSON.parse(userData).userName;
+    } else {
+      this.username = "User"
+    }
+  }
 
   ngOnInit(): void {
     // Dummy data for testing

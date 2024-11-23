@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { UserLogin } from '../../model/class/User';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AdminDashboardService } from '../../services/admin-dashboard.service';
+import { AdminService } from '../../services/admin.service';
 import { AuthService } from '../../services/authentication/auth.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { AuthService } from '../../services/authentication/auth.service';
 })
 export class AdminLoginFormComponent {
   // Service
-  adminService = inject(AdminDashboardService);
+  adminService = inject(AdminService);
   authService = inject(AuthService);
 
   adminLogin: UserLogin = new UserLogin();

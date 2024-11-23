@@ -9,17 +9,14 @@ import { TokenService } from './authentication/token.service';
 })
 export class TrainService {
   private baseUrl: string = 'http://localhost:8080/api/v1';
-  private accessToken: string | null;
   private httpHeaders: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',
   });
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {
-    this.accessToken = tokenService.getAccessToken();
-  }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   private getAuthHeader(): HttpHeaders {
-    return this.httpHeaders.set('Authorization', `Bearer ${this.accessToken}`);
+    return this.httpHeaders.set('Authorization', `Bearer ${this.tokenService.getAccessToken()}`);
   }
 
   // Train CRUD

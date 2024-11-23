@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TrainService } from '../../services/train.service';
 import { ITrain } from '../../model/interface/train';
 import { IUser } from '../../model/interface/user';
-import { AdminDashboardService } from '../../services/admin-dashboard.service';
+import { AdminService } from '../../services/admin.service';
 import { FilterPipe } from './filter.pipe';
 import { IBooking } from '../../model/interface/booking';
 import { TrainRegister } from '../../model/class/Train';
@@ -22,7 +22,7 @@ import { RouterLinkActive } from '@angular/router';
 })
 export class AdminDashboardComponent implements OnInit {
   // Services
-  adminDashBoardService = inject(AdminDashboardService);
+  AdminService = inject(AdminService);
   trainService = inject(TrainService);
 
   // Registering new Train
@@ -69,7 +69,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadUsers() {
-    this.adminDashBoardService.getDashboardUsers().subscribe({
+    this.AdminService.getDashboardUsers().subscribe({
       next: (users: IUser[]) => {
         this.users = [...this.users, ...users];
       },
@@ -80,7 +80,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadBookings() {
-    this.adminDashBoardService.getDashboardBookings().subscribe({
+    this.AdminService.getDashboardBookings().subscribe({
       next: (bookings: IBooking[]) => {
         this.bookings = [...this.bookings, ...bookings];
       },
@@ -91,7 +91,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   registerTrain() {
-    this.adminDashBoardService.postReisterTrain(this.newTrain).subscribe({
+    this.AdminService.postReisterTrain(this.newTrain).subscribe({
       next: (response: HttpResponse<any>) => {
 
         if (response.ok) {
@@ -115,7 +115,7 @@ export class AdminDashboardComponent implements OnInit {
 
   deleteTrain(train: ITrain) {
     console.log('Deleting train:', train);
-    this.adminDashBoardService.deleteTrain(train.trainId).subscribe({
+    this.AdminService.deleteTrain(train.trainId).subscribe({
       next: (response) => {
         if (response.status === 204) {
           this.trains = this.trains.filter(t => t.trainId !== train.trainId);

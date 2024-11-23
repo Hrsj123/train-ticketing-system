@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { TrainDashboard, TrainRegister } from '../../model/class/Train';
-import { AdminDashboardService } from '../../services/admin-dashboard.service';
+import { AdminService } from '../../services/admin.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ITrain } from '../../model/interface/train';
@@ -18,7 +18,7 @@ export class TrainUpdateComponent implements OnInit {
   @Input() isUpdateModalOpen!: boolean; // Recieves modal visibility
   @Output() closeUpdateModal = new EventEmitter<any>();
 
-  adminDashBoardService = inject(AdminDashboardService);
+  AdminService = inject(AdminService);
 
   updatedTrain: TrainRegister;
 
@@ -54,7 +54,7 @@ export class TrainUpdateComponent implements OnInit {
 
   // Updates the train
   updateTrain(): void {
-    this.adminDashBoardService.updateTrain(this.updatedTrain.trainId, this.updatedTrain).subscribe({
+    this.AdminService.updateTrain(this.updatedTrain.trainId, this.updatedTrain).subscribe({
       next: (response) => {
         console.log('Train updated successfully:', response);
         this.closeUpdateModalHandler();

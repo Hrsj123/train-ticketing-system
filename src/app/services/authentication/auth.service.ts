@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { TokenService } from './token.service';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { UserLogin } from '../../model/class/User';
+import { IUser } from '../../model/interface/user';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,8 @@ export class AuthService {
 
   private loggedInUserRole: string | null = null;
 
+  private userData: object | null = null; 
+
   constructor(private http: HttpClient, private tokenService: TokenService) {
     const userRole = localStorage.getItem('userType');
     if (userRole !== 'userType') {
@@ -38,10 +41,11 @@ export class AuthService {
   login(role: 'admin' | 'user', credentials: UserLogin): Observable<any> {
     const url = this.loginUrl[role];
 
-    return this.http.post<{ accessToken: string; refreshToken: string }>(url, credentials, this.httpOptions).pipe(
+    return this.http.post<{ tokens: {accessToken: string; refreshToken: string}, user: IUser }>(url, credentials, this.httpOptions).pipe(
       tap(response => {
-        this.loggedInUserRole = role;
-        this.tokenService.setTokens(response.accessToken, response.refreshToken);
+        this.setLoggedInUserRole(role);
+        this.tokenService.setTokens(response.tokens.accessToken, response.tokens.refreshToken);
+        this.setUserData(response.user);
       }),
       catchError(error => {
         this.logout();
@@ -64,7 +68,6 @@ export class AuthService {
       headers: { Authorization: `Bearer ${refreshToken}` }
     }).pipe(
       tap(response => {
-        this.setLoggedInUserRole(null);
         this.tokenService.setTokens(response.accessToken, response.refreshToken);  // refresh token remains the same
       }),
       catchError(error => {
@@ -102,6 +105,21 @@ export class AuthService {
       localStorage.setItem('userType', userRole);
       this.loggedInUserRole = userRole;
     }
+  }
+
+  /**
+   * Get the userData
+   */
+  getUserData(): object | null {
+    return this.userData;
+  }
+
+  /**
+   * Set the userData
+   */
+  setUserData(userData: object | null): void {
+    localStorage.setItem("userData", JSON.stringify(userData));
+    this.userData = userData;
   }
 
 
