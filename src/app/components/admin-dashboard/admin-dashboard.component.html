@@ -151,7 +151,8 @@
                     *ngIf="isUpdateModalOpen" 
                     [trainData]="selectedTrain" 
                     [isUpdateModalOpen]="isUpdateModalOpen"
-                    (closeUpdateModal)="closeUpdateModal()">
+                    (closeUpdateModal)="closeUpdateModal()"
+                    (refreshTrainList)="refreshTrainList($event)">
                 </app-train-update>
             </div>
 

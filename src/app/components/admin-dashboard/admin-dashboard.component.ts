@@ -94,14 +94,10 @@ export class AdminDashboardComponent implements OnInit {
   registerTrain() {
     this.AdminService.postReisterTrain(this.newTrain).subscribe({
       next: (response: HttpResponse<any>) => {
-
         if (response.ok) {
-          let newTrainCopy: any = {
-            trainId: response.body.trainId,
-            trainName: this.newTrain.trainName + " " + this.newTrain.trainNumber,
-            route: this.newTrain.startLocation + " to " + this.newTrain.endLocation,
-          }
-          this.trains.push({ ...newTrainCopy });
+          console.log(response.body)
+          let trainNumber: Array<string> = response.body.trainName.split(" ")
+          this.trains.push({...response.body, trainNumber: trainNumber[trainNumber.length - 1]});
           this.newTrain = new TrainRegister();
           this.closeModal();
         } else {
@@ -160,8 +156,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   openUpdateModal(train: any) {
-    let { trainId, ...putData } = train;
-    this.selectedTrain = { ...putData }; // Set the train data
+    this.selectedTrain = { ...train }; // Set the train data
     this.isUpdateModalOpen = true; // Open modal
     console.log(this.isUpdateModalOpen);
   }
@@ -171,4 +166,10 @@ export class AdminDashboardComponent implements OnInit {
     this.isUpdateModalOpen = false;
   }
 
+  // Update the train list (post update)
+  refreshTrainList(updatedTrain: ITrain): void {
+    this.trains = this.trains.map(train =>
+      train.trainId === updatedTrain.trainId ? updatedTrain : train
+    );
+  }
 }

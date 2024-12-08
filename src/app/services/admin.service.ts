@@ -54,7 +54,6 @@ export class AdminService {
       headers: this.httpHeaders.set('Authorization', `Bearer ${this.accessToken}`),
     }
     const url = `${this.baseUrl}/admin/trains/${trainId}`;
-    console.log(updatedTrain)
     // TODO : fix this
     // console.log("----------------------------------")
     // console.log({
@@ -71,7 +70,7 @@ export class AdminService {
     }, {
       ...httpOptions,
       observe: 'response',
-    } );
+    });
   }
 
   

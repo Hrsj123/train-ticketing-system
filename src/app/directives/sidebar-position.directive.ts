@@ -17,8 +17,6 @@ export class SidebarPositionDirective {
         : 0;
       const viewportHeight = window.innerHeight; // Get the viewport height in pixels
       const navbarHeightVh = (navbarHeightPx / viewportHeight) * 100; // Convert pixels to vh
-      
-      console.log(`Navbar height in vh: ${navbarHeightVh}vh`);
 
       this.el.nativeElement.style.top = `${navbarHeightVh + 7}vh`;
     }
