@@ -1,32 +1,45 @@
 <!-- Admin Dashboard -->
 <div class="container mt-5">
     <div class="row">
-<!-- Sidebar -->
-<div class="col-md-3">
-    <div class="list-group position-sticky" style="top: 7vh;">
-        <a href="#" class="list-group-item list-group-item-action active text-center" aria-current="true">Dashboard</a>
-        <a href="/admin/dashboard#trainManagement" class="list-group-item list-group-item-action text-center">Train Management</a>
-        <a href="/admin/dashboard#userManagement" class="list-group-item list-group-item-action text-center">User Management</a>
-        <a href="/admin/dashboard#bookingManagement" class="list-group-item list-group-item-action text-center">Booking Management</a>
-        <a href="/admin/dashboard#reportsAnalytics" class="list-group-item list-group-item-action text-center">Reports & Analytics</a>
-        <a href="/admin/dashboard#systemConfig" class="list-group-item list-group-item-action text-center">System Configuration</a>
-    </div>
-</div>
-
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <!-- <div class="list-group position-sticky mb-5" style="top: 16vh;"> -->
+            <div 
+                id="sidebar"
+                class="list-group position-fixed mb-5"
+                style="width: 18vw;"
+                appSidebarPosition
+            >               <!-- appSidebarPosition == Directive -->
+                <a href="#" class="list-group-item list-group-item-action active text-center" aria-current="true">Dashboard</a>
+                <a href="/admin/dashboard#trainManagement" class="list-group-item list-group-item-action text-center">Train Management</a>
+                <a href="/admin/dashboard#userManagement" class="list-group-item list-group-item-action text-center">User Management</a>
+                <a href="/admin/dashboard#bookingManagement" class="list-group-item list-group-item-action text-center">Booking Management</a>
+                <a href="/admin/dashboard#reportsAnalytics" class="list-group-item list-group-item-action text-center">Reports & Analytics</a>
+                <a href="/admin/dashboard#systemConfig" class="list-group-item list-group-item-action text-center">System Configuration</a>
+            </div>
+        </div>
 
         <!-- Main Content -->
-        <div class="col-md-9">
+        <div class="col-md-9 text-md-start text-center">
 
             <!-- Train Management Section -->
             <div id="trainManagement">
-                <h2 class="m-1">Train Management</h2>
+                <h1 class="m-1">Train Management</h1>
 
-                <div class="row">
-                    <h4 class="col-8 pt-3">Registered Trains</h4>
-                    <button class="btn btn-primary mb-3 float-end col-3" (click)="openModal()">     <!-- data-bs-toggle="modal" data-bs-target="#addTrainModal"-->
+                <div class="row align-items-center">
+                    <!-- Heading -->
+                    <h4 class="col-md-8 col-12 pt-3 text-md-start text-center">
+                      Registered Trains
+                    </h4>
+                  
+                    <!-- Button -->
+                    <div class="col-md-4 col-12 text-md-end text-center">
+                      <button class="btn btn-primary mb-3" (click)="openModal()">
                         Register New Train
-                    </button>
-                </div>
+                      </button>
+                    </div>
+                  </div>
+                  
                 <!-- Train List -->
                 <table class="table">
                     <thead>
@@ -144,7 +157,7 @@
 
             <!-- User Management Section -->
             <div id="userManagement" class="mt-5">
-                <h2>User Management</h2>
+                <h1>User Management</h1>
                 <input type="text" class="form-control mb-3" placeholder="Search Users" [(ngModel)]="searchQuery">
                 <table class="table">
                     <thead>
@@ -171,7 +184,7 @@
 
             <!-- Booking Management Section -->
             <div id="bookingManagement" class="mt-5">
-                <h2>Booking Management</h2>
+                <h1>Booking Management</h1>
                 <input type="text" class="form-control mb-3" placeholder="Search Bookings (PNR/Name)"
                     [(ngModel)]="bookingQuery">
                 <table class="table">
@@ -199,7 +212,7 @@
 
             <!-- Reports and Analytics Section -->
             <div id="reportsAnalytics" class="mt-5">
-                <h2>Reports & Analytics</h2>
+                <h1>Reports & Analytics</h1>
                 <button class="btn btn-primary m-1" (click)="showAlert('Coming Soon...')">Generate Daily Report</button>
                 <button class="btn btn-primary m-1" (click)="showAlert('Coming Soon...')">Generate Monthly
                     Report</button>
@@ -212,7 +225,7 @@
 
             <!-- System Configuration Section -->
             <div id="systemConfig" class="mt-5">
-                <h2>System Configuration</h2>
+                <h1>System Configuration</h1>
                 <button class="btn btn-warning mb-3 " data-bs-toggle="modal" data-bs-target="#systemSettingsModal"
                     (click)="showAlert('Coming Soon...')">Manage
                     Settings</button>

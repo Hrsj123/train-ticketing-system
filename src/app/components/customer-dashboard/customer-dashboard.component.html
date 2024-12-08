@@ -12,7 +12,7 @@
       </div>
   
       <div class="col-md-9">
-        <div class="container mt-5">
+        <div *ngIf="currentFeature === 'dashboard'" class="container mt-5">
           <div class="col-12 text-center mb-4">
             <h2 class="fw-bold display-4 text-primary">Welcome to Your Dashboard</h2>
             <h4 class="text-muted mt-3">Hello, <span class="text-dark">{{ username }}</span>!</h4>
@@ -77,25 +77,161 @@
           <form (submit)="bookTicket()">
             <div class="form-group">
               <label>Passenger Name</label>
-              <input type="text" class="form-control" [(ngModel)]="bookingDetails.passengerName" name="passengerName" />
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="bookingDetails.passengerName"
+                name="passengerName"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Number of Seats</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="bookingDetails.seatCount"
+                name="seatCount"
+                min="1"
+                max="6"
+                placeholder="Enter number of seats"
+                required
+                (ngModelChange)="deselectAllSeats()"
+              />
             </div>
             <div class="form-group">
               <label>Train</label>
-              <select class="form-control" [(ngModel)]="bookingDetails.trainId" name="trainId">
-                <option *ngFor="let train of trains" [value]="train.trainId">{{ train.trainName }}</option>
+              <select
+                class="form-control"
+                [(ngModel)]="bookingDetails.trainId"
+                name="trainId"
+                (change)="selectTrain($event)"
+                required
+              >
+                <option *ngFor="let train of trains" [value]="train.trainId">
+                  {{ train.trainName }}
+                </option>
               </select>
             </div>
-            <div class="form-group">
-              <label>Class</label>
-              <select class="form-control" [(ngModel)]="bookingDetails.class" name="class">
-                <option value="Sleeper">Sleeper</option>
-                <option value="AC">AC</option>
-              </select>
+
+            <div *ngIf="bookingDetails.seatCount !== null && bookingDetails.seatCount !== 0 && selectedTrain" class="seat-selection mt-4">
+              <h5 class="text-center mb-4">Seat Selection - {{ selectedTrain.trainName }}</h5>
+              <div class="train-box p-4 border border-primary rounded-3 bg-light">
+                <div class="row flex-column gx-3 gy-3">
+                  <!-- Partition 1 (2 Rows) -->
+                  <div class="col">
+                    <div class="row gx-2 gy-3 mb-1">
+                      <div *ngFor="let seat of selectedTrain.seats.slice(0, 6)" class="col-2 text-center">
+                        <button
+                          type="button"
+                          class="btn seat-button"
+                          [ngClass]="{
+                            'btn-primary': seat.available,
+                            'btn-secondary': !seat.available,
+                            'btn-success': bookingDetails.selectedSeats.includes(seat.id)
+                          }"
+                          [disabled]="!seat.available"
+                          (click)="toggleSeatSelection(seat.id)"
+                        >
+                          {{ seat.id }}
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row gx-2 gy-3">
+                      <div *ngFor="let seat of selectedTrain.seats.slice(6, 12)" class="col-2 text-center">
+                        <button
+                          type="button"
+                          class="btn seat-button"
+                          [ngClass]="{
+                            'btn-primary': seat.available,
+                            'btn-secondary': !seat.available,
+                            'btn-success': bookingDetails.selectedSeats.includes(seat.id)
+                          }"
+                          [disabled]="!seat.available"
+                          (click)="toggleSeatSelection(seat.id)"
+                        >
+                          {{ seat.id }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+            
+                  <!-- Space for walking -->
+                  <div class="col-2"></div>
+            
+                  <!-- Partition 2 (3 Rows) -->
+                  <div class="col">
+                    <div class="row gx-2 gy-3 mb-1">
+                      <div *ngFor="let seat of selectedTrain.seats.slice(12, 18)" class="col-2 text-center">
+                        <button
+                          type="button"
+                          class="btn seat-button"
+                          [ngClass]="{
+                            'btn-primary': seat.available,
+                            'btn-secondary': !seat.available,
+                            'btn-success': bookingDetails.selectedSeats.includes(seat.id)
+                          }"
+                          [disabled]="!seat.available"
+                          (click)="toggleSeatSelection(seat.id)"
+                        >
+                          {{ seat.id }}
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row gx-2 gy-3 mb-1">
+                      <div *ngFor="let seat of selectedTrain.seats.slice(18, 24)" class="col-2 text-center">
+                        <button
+                          type="button"
+                          class="btn seat-button"
+                          [ngClass]="{
+                            'btn-primary': seat.available,
+                            'btn-secondary': !seat.available,
+                            'btn-success': bookingDetails.selectedSeats.includes(seat.id)
+                          }"
+                          [disabled]="!seat.available"
+                          (click)="toggleSeatSelection(seat.id)"
+                        >
+                          {{ seat.id }}
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row gx-2 gy-3">
+                      <div *ngFor="let seat of selectedTrain.seats.slice(24, 30)" class="col-2 text-center">
+                        <button
+                          type="button"
+                          class="btn seat-button"
+                          [ngClass]="{
+                            'btn-primary': seat.available,
+                            'btn-secondary': !seat.available,
+                            'btn-success': bookingDetails.selectedSeats.includes(seat.id)
+                          }"
+                          [disabled]="!seat.available"
+                          (click)="toggleSeatSelection(seat.id)"
+                        >
+                          {{ seat.id }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+              <!-- Seat Details -->
+              <div class="mt-4">
+                <p>
+                  <strong>Selected Seats:</strong>
+                  <span *ngFor="let seat of bookingDetails.selectedSeats" class="badge bg-success mx-1">
+                    {{ seat }}
+                  </span>
+                </p>
+                <p><strong>Total Cost:</strong> ₹{{ bookingDetails.totalCost }}</p>
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Confirm Booking</button>
+
+            <button type="submit" class="btn btn-primary mt-3 mb-5" (click)="bookTicket()">Confirm Booking</button>
           </form>
         </div>
-  
+        
         <!-- Booking History -->
         <div *ngIf="currentFeature === 'bookingHistory'">
           <h4>Booking History</h4>

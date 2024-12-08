@@ -5,12 +5,13 @@ import { IUser } from '../model/interface/user';
 import { IBooking } from '../model/interface/booking';
 import { TrainRegister } from '../model/class/Train';
 import { TokenService } from './authentication/token.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  private baseUrl: string = 'http://localhost:8080/api/v1';
+  private baseUrl: string = environment.API_URL;
   private httpHeaders: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',
   });

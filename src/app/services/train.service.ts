@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ITrain, ITrainDashboard } from '../model/interface/train';
 import { TokenService } from './authentication/token.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrainService {
-  private baseUrl: string = 'http://localhost:8080/api/v1';
+  private baseUrl: string = environment.API_URL;
   private httpHeaders: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',
   });

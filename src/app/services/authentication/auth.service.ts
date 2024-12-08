@@ -1,20 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { TokenService } from './token.service';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { UserLogin } from '../../model/class/User';
 import { IUser } from '../../model/interface/user';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private isRefreshing = false;
+  private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  
   private loginUrl: { [role: string]: string } = {
-    admin: 'http://localhost:8080/api/v1/admin/login',
-    user: 'http://localhost:8080/api/v1/customers/login'
+    admin: `${environment.API_URL}/admin/login`,
+    user: `${environment.API_URL}/customers/login`
   };
 
-  private refreshUrl: string = 'http://localhost:8080/api/v1/customers/refresh';
+  private refreshUrl: string = `${environment.API_URL}/admin/refresh`;            // Check this url...
 
   private httpOptions: object = {
     headers: new HttpHeaders({
@@ -60,23 +64,39 @@ export class AuthService {
   */
  refreshToken(): Observable<any> {
    const refreshToken = this.tokenService.getRefreshToken();
-   if (!refreshToken) {
-     throw new Error('No refresh token available');
+    if (!refreshToken) {
+      throw new Error('No refresh token available');
     }
-    
-    return this.http.post<{ accessToken: string, refreshToken: string }>(this.refreshUrl, {}, {
-      headers: { Authorization: `Bearer ${refreshToken}` }
-    }).pipe(
-      tap(response => {
-        this.tokenService.setTokens(response.accessToken, response.refreshToken);  // refresh token remains the same
-      }),
-      catchError(error => {
-        this.logout();
-        this.setLoggedInUserRole(null);
-        console.error('Error occurred:', error); // Executed for errors (e.g., 401, 500)
-        return throwError(() => error);
-      })
-    );
+
+    if (this.isRefreshing) {
+      // If a refresh is already in progress, return the subject as an observable
+      return this.refreshTokenSubject.pipe(
+        filter(token => token !== null), // Wait until the refreshTokenSubject has a value
+        take(1), // Only take the next emitted value
+        switchMap(() => of(null)) // Use the new access token
+      );
+    } else {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null); // Reset the subject
+
+      return this.http.post<{ accessToken: string; refreshToken: string }>(this.refreshUrl, {}, {
+        headers: { Authorization: `Bearer ${refreshToken}` }
+      }).pipe(
+        tap(response => {
+          this.tokenService.setTokens(response.accessToken, refreshToken);    // TODO: Also apply refresh token rotation...
+          this.refreshTokenSubject.next(response.accessToken); // Emit the new token
+        }),
+        catchError(error => {
+          this.logout();
+          this.setLoggedInUserRole(null);
+          this.refreshTokenSubject.next(null); // Reset the subject
+          return throwError(() => error);
+        }),
+        tap(() => {
+          this.isRefreshing = false;
+        })
+      );
+    }
   }
 
   /**

@@ -1,0 +1,40 @@
+.train-box {
+    max-width: 800px;
+    margin: auto;
+    border-radius: 20px;
+    /* Smooth borders */
+    background: #f8f9fa;
+    /* Light background for better visuals */
+}
+
+.seat-button {
+    width: 50px;
+    height: 50px;
+    font-size: 14px;
+    padding: 0;
+    border-radius: 15px;
+    /* Rounded buttons */
+}
+
+.col-1 {
+    background: #e9ecef;
+    /* Light gray to represent walking space */
+    border-radius: 8px;
+    /* Rounded walking area */
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    cursor: not-allowed;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}

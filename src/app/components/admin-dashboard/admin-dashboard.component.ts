@@ -11,12 +11,13 @@ import { TrainRegister } from '../../model/class/Train';
 import { HttpResponse } from '@angular/common/http';
 import { TrainUpdateComponent } from '../train-update/train-update.component';
 import { RouterLinkActive } from '@angular/router';
+import { SidebarPositionDirective } from '../../directives/sidebar-position.directive';
 
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [TrainUpdateComponent, FormsModule, JsonPipe, CommonModule, FilterPipe, RouterLinkActive],
+  imports: [TrainUpdateComponent, FormsModule, JsonPipe, CommonModule, FilterPipe, RouterLinkActive, SidebarPositionDirective],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css'
 })
